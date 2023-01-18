@@ -43,4 +43,3 @@ frecuency = str(list(zip(lemmas, word_frecuency)))
 
 print(frecuency)
 
-#Esto es una modificacion :)
