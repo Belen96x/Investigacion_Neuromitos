@@ -1,13 +1,10 @@
-#Import of libraries
+from collections import Counter
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
 
-import string
-import spacy
-import es_core_news_sm
 
-#Remove ortographic symbols of text.
-
-texto = """
-Familias por el Retorno Seguro a las Escuelas.
+corpus = [
+"""Familias por el Retorno Seguro a las Escuelas.
 Pagina web ¿Quienes somos?. ¿Quienes somos?. Familias, docentes, estudiantes e integrantes de la comunidad en general en alerta por el retorno a la presencialidad en las escuelas sin condiciones de seguridad. ¿Como nos organizamos?. La convocatoria a participar del colectivo es abierta al publico. Nos comunicamos por redes y grupos de WhatsApp organizados en comisiones para desarrollar acciones que visibilicen y denuncien la problematica que estamos atravesando. Elaboramos informes con trabajo de profesionales de distintas disciplinas que integran el colectivo, pronunciamientos, gacetillas, contenido para redes sociales y medios de comunicacion. El sentido de lo colectivo. Entendemos que la lucha colectiva es clave para exigir que se respeten nuestros derechos. En tiempos de logicas "individuales", proponemos actuar desde los lazos entre diferentes actores de la comunidad educativa, poniendo en practica la solidaridad, la empatia, el debate y la construccion colectiva de estrategias y acciones para cuidarnos entre todxs. ¿Que puedo hacer si no quiero presencialidad en pandemia?. Es tu derecho, podes elegir. Desde el colectivo brindamos herramientas para hacer el pedido de excepcion formalmente. Lxs invitamos a leer la entrada en el blog 'Excepcion de Asistencia'. ¿Que exigimos?. A partir de las primeras reuniones virtuales multitudinarias se definieron una serie de demandas para el retorno seguro a la escuela. Teletrabajo para madres y padres de menores de 14 años. Licencias en el trabajo (por razones de salud y cuidado de menores). Ayudas por parte del Estado para familias desempleadas o con empleos informales para garantizar el cuidado de las niñas y los niños. indice o "semaforo epidemiologico" (CDC SAP) – Desde nuestro colectivo exigimos que el gobierno de CABA explique cual es el criterio que utiliza para definir la apertura de la presencialidad en las escuelas. El semaforo epidemiologico establecido por el Consejo Federal de Educacion o el de la SAP que toma como referencia el semaforo de los CDC indican que la Ciudad de Buenos Aires esta en rojo. Entrega de dispositivos y conectividad gratuita. Entrega de libros de texto de todas las areas, kits escolares, textos literarios y cuadernillos para utilizar hasta que esten las condiciones dadas para el retorno a la presencialidad y para que, en caso de tener que volver a suspender despues, los recursos necesarios para la virtualidad ya esten garantizados. Transporte escolar – Por lo expresado anteriormente, proponemos que se haga uso del trasporte escolar ya existente para el plan de natacion y salidas didacticas para ponerlo a disposicion de las familias que vivan a mas de 15 cuadras de sus escuelas de manera gratuita. Condiciones de bioseguridad dentro de las escuelas (insumos y personal de limpieza) bajo control de comisiones conformadas por las direcciones de las escuelas, docentes y cooperadoras que tengan la potestad de suspender las clases presenciales toda vez que los protocolos no puedan llevarse adelante o no esten dadas las condiciones. Distanciamiento minimo de 2 metros en las aulas y todos los espacios de permanencia de estudiantes que es la distancia minima para evitar contagios. Ventilacion de las aulas y de todos los espacios de permanencia. Reduccion de la cantidad de alumnos por grupo.  Para que esto sea posible es necesario el desdoblamiento de los grupos que implica mas aulas y mas docentes. Exigimos el acondicionamiento para el uso escolar de inmuebles ociosos para fines escolares. Señalamos, como lo venimos haciendo desde siempre, la necesidad de un plan integral de construccion de escuelas. La falta de vacantes va año a año en aumento y la pandemia ha dejado al descubierto con crudeza la falta de aulas y el derrumbe edilicio en que se encuentran las escuelas publicas. Para la reduccion de cantidad de alumnos por grupo es necesario el nombramiento de cargos docentes y profesionales de emergencia bajo los lineamientos del Estatuto Docente. Tarjeta alimentaria para todos los niveles y modalidades del sistema educativo por igual (o bolsones saludables, nutritivos y en cantidad y calidad acorde a las necesidades de los estudiantes y sus familias).
 Carta Abierta a Alberto Fernandez y Horacio Rodriguez Larreta.
 Entendemos que, tal como esta planteado el retorno a la presencialidad a las escuelas, de manera obligatoria, inconsulta y arbitraria, y de manera inminente, pone en peligro la salud fisica y psiquica de las infancias, juventudes, familias, docentes y de la comunidad en general. A ello se suma nuestra preocupacion por el efecto que un aumento en los contagios tendra en todos los habitantes del pais, en un contexto en que la vacunacion aun esta en ciernes.
@@ -226,39 +223,13 @@ CONECTIVIDAD, DISPOSITIVOS, DISPENSAS Y AYUDAS ECONOMICAS Y ALIMENTARIAS A LAS F
 FAMILIAS POR UN RETORNO SEGURO A LAS ESCUELAS.
 
 """
+]
+     
 
-textito = texto.lower()
-
-clean_str = textito.translate (str.maketrans('','', string.punctuation))
-
-#print(clean_str)
-
-#Rewrite each word in lower caps
-
-lower_case_str = clean_str.lower()
-
-#print(lower_case_str)
-
-#Lematize each word of the string. Turn into a list already
-
-nlp = spacy.load('es_core_news_sm')
-
-doc = nlp(lower_case_str)
-
-lemmas = [tok.lemma_.lower() for tok in doc]
-
-#print(lemmas)
-
-#Calculate word frequency
-
-word_frecuency = []
-
-for w in lemmas:
-  word_frecuency.append(lemmas.count(w))
-
-frecuency = str(list(zip(lemmas, word_frecuency)))
-
-print(frecuency)
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(corpus)
+feature_names = vectorizer.get_feature_names_out()
+print(pd.DataFrame(X.toarray(), columns = feature_names))
 
 
 
